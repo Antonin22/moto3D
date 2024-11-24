@@ -1,0 +1,31 @@
+#version 330 core
+
+// Entrées
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 uv;
+layout(location = 2) in vec3 normal;
+
+// Uniformes
+uniform mat4 MVP;
+uniform mat4 modelMatrix;
+uniform vec3 lightPosition;
+
+// Sorties
+out vec2 fragUV;
+out vec3 fragNormal;
+out vec3 fragLightVector;
+out vec3 fragWorldPos;
+
+void main() {
+
+    gl_Position = MVP * vec4(position, 1.0);
+
+    fragUV = uv;
+
+    fragNormal = normalize(mat3(transpose(inverse(modelMatrix))) * normal);
+
+    vec3 worldPos = vec3(modelMatrix * vec4(position, 1.0));
+    fragWorldPos = worldPos;
+
+    fragLightVector = lightPosition - worldPos;
+}
